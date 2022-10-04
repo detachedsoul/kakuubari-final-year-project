@@ -1,3 +1,4 @@
+<?php require_once("functions.php"); ?>
 <!DOCTYPE html>
 <html lang="en" class="index-html">
 
@@ -14,10 +15,12 @@
 
     <main class="form-signin w-100 m-auto">
         <form method="POST">
-            <h1 class="h3 mb-3 fw-normal">Reset your password</h1>
+            <h1 class="h3 mb-3 fw-normal">
+                <?= resetPassword() ?>
+            </h1>
 
             <div class="form-floating mb-3">
-                <input type="usernamePassword" class="form-control" id="usernamePassword" placeholder="name@example.com">
+                <input type="text" class="form-control" id="usernamePassword" placeholder="name@example.com" name="usernamePassword">
                 <label for="usernamePassword">Email address or username</label>
             </div>
 
