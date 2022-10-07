@@ -1,6 +1,6 @@
 <?php
-session_start();
 ob_start();
+session_start();
 require_once("includes/db.php");
 
 // Registers a new user
@@ -61,7 +61,7 @@ function registerUser()
 }
 
 // Logs a user in if the provided details are valid
-function login()
+function login($table, $redirectTo)
 {
     $con = dbConnect();
 
@@ -69,7 +69,7 @@ function login()
         $usernamePassword = strtolower($_POST['usernamePassword']);
         $password = $_POST['password'];
 
-        $sql = "SELECT `password`, `name` FROM users WHERE username = ? OR email = ?";
+        $sql = "SELECT `password`, `name` FROM {$table} WHERE username = ? OR email = ?";
         $login = $con->prepare($sql);
         $login->bind_param(
             "ss",
@@ -85,11 +85,12 @@ function login()
                 $userFullName = $row->name;
             }
 
+
             if (password_verify($password, $userPassword)) {
                 echo "<p class='text-success'>Login successful.</p>";
                 $_SESSION['userFullName'] = $userFullName;
 
-                header("Refresh: 5; users/");
+                header("Refresh: 5; {$redirectTo}");
             } else {
                 echo "<p class='text-danger'>Incorrect username, email or password</p>";
             }
@@ -102,7 +103,7 @@ function login()
 }
 
 // Reset's a user's password
-function resetPassword()
+function resetPassword($table)
 {
     $con = dbConnect();
 
@@ -110,7 +111,7 @@ function resetPassword()
         $usernamePassword = $_POST['usernamePassword'];
 
         // Check if the username or email exists
-        $sql = "SELECT `email` FROM users WHERE email = ? OR username = ?";
+        $sql = "SELECT `email` FROM {$table} WHERE email = ? OR username = ?";
         $stmt = $con->prepare($sql);
         $stmt->bind_param(
             "ss",
@@ -126,7 +127,7 @@ function resetPassword()
             $newPassword = mt_rand(1, 99999);
             $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
 
-            $sql = "UPDATE `users` SET `password` = ? WHERE email = ? OR username = ?";
+            $sql = "UPDATE `{$table}` SET `password` = ? WHERE email = ? OR username = ?";
             $stmt = $con->prepare($sql);
             $stmt->bind_param(
                 "sss",

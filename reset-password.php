@@ -16,7 +16,7 @@
     <main class="form-signin w-100 m-auto">
         <form method="POST">
             <h1 class="h3 mb-3 fw-normal">
-                <?= resetPassword() ?>
+                <?= resetPassword('users') ?>
             </h1>
 
             <div class="form-floating mb-3">
@@ -29,7 +29,7 @@
             </p>
 
             <p>
-                Already have an account? <a class="link-primary text-decoration-none" href="index.php">Login instead</a>
+                Already have an account? <a class="link-primary text-decoration-none" href="/">Login instead</a>
             </p>
 
             <button class="w-100 btn btn-lg btn-primary" type="submit" name="reset-password">Reset Password</button>
@@ -37,8 +37,5 @@
             <p class="mt-5 mb-3 text-muted">&copy; <?= date('Y') ?>. All rights reserved.</p>
         </form>
     </main>
-
-    <script src="assets/js/bootstrap.min.js"></script>
 </body>
-
 </html>

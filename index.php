@@ -16,7 +16,7 @@
     <main class="form-signin w-100 m-auto">
         <form method="POST">
             <h1 class="h3 mb-3 fw-normal">
-                <?= login() ?>
+                <?= login("users", "users/") ?>
             </h1>
 
             <div class="form-floating">
@@ -42,8 +42,5 @@
             <p class="mt-5 mb-3 text-muted">&copy; <?= date('Y') ?>. All rights reserved.</p>
         </form>
     </main>
-
-    <script src="assets/js/bootstrap.min.js"></script>
 </body>
-
 </html>
