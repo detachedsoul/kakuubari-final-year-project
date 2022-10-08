@@ -56,6 +56,15 @@ session_start();
             <hr class="sidebar-divider my-0">
 
             <li class=" nav-item">
+                <a class="nav-link" href="/admin/pending-loan.php">
+                    <i class="fas fa-fw fa-credit-card"></i>
+                    <span>Pending Loan</span></a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <li class=" nav-item">
                 <a class="nav-link" href="/admin/payment-history.php">
                     <i class="fas fa-fw fa-dollar-sign"></i>
                     <span>Payment History</span></a>
@@ -68,15 +77,6 @@ session_start();
                 <a class="nav-link" href="/admin/borrowers.php">
                     <i class="fas fa-fw fa-users"></i>
                     <span>Borrowers</span></a>
-            </li>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider my-0">
-
-            <li class=" nav-item">
-                <a class="nav-link" href="/admin/loan-type.php">
-                    <i class="fas fa-fw fa-landmark"></i>
-                    <span>Loan Types</span></a>
             </li>
 
             <!-- Divider -->
@@ -127,7 +127,7 @@ session_start();
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="/admin/settings.php">
                                     <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Settings
                                 </a>
