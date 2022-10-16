@@ -1,13 +1,10 @@
 <?php
-$pageTitle = "Admin Dashboard &mdash; Borrowers";
+$pageTitle = "Admin Dashboard &mdash; Edit Loan Plans";
 require_once("includes/header.php");
 ?>
-
 <h2>
-    Borrower's List
+    Edit Loan Plan
 </h2>
-
-<?= viewBorrowers(); ?>
-
 <?php
+updateLoanPlan();
 require_once("includes/footer.php");

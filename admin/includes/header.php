@@ -1,6 +1,5 @@
 <?php
-ob_start();
-session_start();
+require_once("../functions.php");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -83,7 +82,16 @@ session_start();
             <hr class="sidebar-divider my-0">
 
             <li class=" nav-item">
-                <a class="nav-link" href="/admin/loan-plan.php">
+                <a class="nav-link" href="/admin/loan-types.php">
+                    <i class="fas fa-fw fa-paperclip"></i>
+                    <span>Loan Types</span></a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <li class=" nav-item">
+                <a class="nav-link" href="/admin/loan-plans.php">
                     <i class="fas fa-fw fa-landmark"></i>
                     <span>Loan Plans</span></a>
             </li>
