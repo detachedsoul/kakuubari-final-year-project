@@ -16,7 +16,7 @@ require_once("includes/header.php");
                                                 Borrowers
                                             </div>
                                             <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                                20
+                                                <?= getTotalBorrowers() ?>
                                             </div>
                                         </div>
                                         <div class="col-auto">
@@ -36,7 +36,7 @@ require_once("includes/header.php");
                                                 Total Receivable
                                             </div>
                                             <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                                210
+                                                <?= getTotalExpectedFunds() ?>
                                             </div>
                                         </div>
                                         <div class="col-auto">
@@ -54,7 +54,9 @@ require_once("includes/header.php");
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                                 Pending Requests</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                <?= getTotalPendingRequest() ?>
+                                            </div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-comments fa-2x text-gray-300"></i>

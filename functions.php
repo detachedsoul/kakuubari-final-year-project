@@ -181,6 +181,7 @@ function viewPendingLoans()
                 <th scope="col">Loan ID</th>
                 <th scope="col">BVN</th>
                 <th scope="col">Full Name</th>
+                <th scope="col">Loan Type</th>
                 <th scope="col">Loan Plan</th>
                 <th scope="col">Amount</th>
                 <th scope="col">Action</th>
@@ -198,7 +199,7 @@ function viewPendingLoans()
                     <td><?= $row->name ?></td>
                     <td><?= $row->loan_type ?></td>
                     <td><?= $row->loan_plan ?></td>
-                    <td>₦ <?= $row->amount ?></td>
+                    <td>₦ <?= number_format($row->amount) ?></td>
                     <td>
                         <a href="/admin/pending-loan.php?approve=true&id=1">
                             Approve Loan
@@ -261,7 +262,7 @@ function viewBorrowers()
 {
     $con = dbConnect();
 
-    $sql = "SELECT * FROM loan WHERE status = 'oweing'";
+    $sql = "SELECT * FROM loan WHERE status = 'debtor'";
     $stmt = $con->query($sql);
 
     if ($stmt->num_rows < 1) {
@@ -686,4 +687,36 @@ function updateLoanType()
             }
         }
     }
+}
+
+function getTotalBorrowers()
+{
+    $con = dbConnect();
+    $sql = "SELECT id FROM loan WHERE status = 'debtor'";
+    $stmt = $con->query($sql);
+
+    return $stmt->num_rows;
+}
+
+function getTotalPendingRequest()
+{
+    $con = dbConnect();
+    $sql = "SELECT id FROM loan WHERE status = 'pending'";
+    $stmt = $con->query($sql);
+
+    return $stmt->num_rows;
+}
+
+function getTotalExpectedFunds()
+{
+    $con = dbConnect();
+    $sql = "SELECT amount FROM loan WHERE status = 'debtor'";
+    $stmt = $con->query($sql);
+    $total = 0;
+
+    while ($row = $stmt->fetch_object()) {
+        $total = $row->amount + $total;
+    }
+
+    return $total;
 }
