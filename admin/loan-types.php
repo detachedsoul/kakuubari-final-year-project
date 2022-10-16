@@ -47,40 +47,6 @@ require_once("includes/header.php");
     </div>
 </div>
 
-<!-- Edit loan plan modal -->
-<div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">
-                    Edit Loan Type
-                </h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form method="POST">
-                    <div class="mb-3">
-                        <label for="editloanType" class="form-label">Loan Type</label>
-                        <input type="text" class="form-control" id="editloanType" aria-describedby="editloanType" name="editloanType">
-                    </div>
-                    <div class="mb-3">
-                        <label for="editInterestRate" class="form-label">Interest Rate</label>
-                        <input type="number" min="1" class="form-control" id="editInterestRate" name="editInterestRate">
-                    </div>
-                    <div class="mb-3">
-                        <label for="editDescription" class="form-label">Description</label>
-                        <input type="number" min="1" class="form-control" id="editDescription" name="editDescription">
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">Edit New Plan</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
 <?= viewLoanTypes(); ?>
 
 <?php

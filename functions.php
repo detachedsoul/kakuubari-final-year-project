@@ -341,7 +341,7 @@ function viewLoanTypes()
                     <td><?= $row->interest_rate ?>%</td>
                     <td><?= $row->description ?></td>
                     <td class="d-flex w-100 justify-content-between">
-                        <a data-toggle="modal" data-target="#edit" href="/admin/loan-types.php?editID=<?= $row->id ?>" role="button">
+                        <a href="/admin/edit-loan-type.php?editByID=<?= $row->id ?>">
                             <i class="fas fa-fw fa-edit"></i>
                         </a>
 
@@ -552,39 +552,39 @@ function updateLoanPlan()
         echo "<p class='text-danger h1 text-center'>Loan plan not found</p>";
 
         header("Refresh: 3, /admin/loan-plans.php");
-     } else {
+    } else {
         while ($row = $res->fetch_object()) : ?>
-                <div class="moda" id="edit" aria-labelledby="exampleModalLabel">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">
-                                    <?= $message ?>
-                                </h5>
-                            </div>
-                            <div class="modal-body">
-                                <form method="POST">
-                                    <div class="mb-3">
-                                        <label for="plan" class="form-label">Plan Duration</label>
-                                        <input type="text" class="form-control" id="plan" aria-describedby="plan" name="plan" value="<?= $row->plan ?>">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="interestRate" class="form-label">Interest Rate</label>
-                                        <input type="number" min="1" class="form-control" id="interestRate" name="interestRate" value="<?= $row->interest_rate ?>">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="overduePenalty" class="form-label">Overdue Penalty</label>
-                                        <input type="number" min="1" class="form-control" id="overduePenalty" name="overduePenalty" value="<?= $row->overdue_penalty ?>">
-                                    </div>
+            <div id="edit" aria-labelledby="exampleModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">
+                                <?= $message ?>
+                            </h5>
+                        </div>
+                        <div class="modal-body">
+                            <form method="POST">
+                                <div class="mb-3">
+                                    <label for="plan" class="form-label">Plan Duration</label>
+                                    <input type="text" class="form-control" id="plan" aria-describedby="plan" name="plan" value="<?= $row->plan ?>">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="interestRate" class="form-label">Interest Rate</label>
+                                    <input type="number" min="1" class="form-control" id="interestRate" name="interestRate" value="<?= $row->interest_rate ?>">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="overduePenalty" class="form-label">Overdue Penalty</label>
+                                    <input type="number" min="1" class="form-control" id="overduePenalty" name="overduePenalty" value="<?= $row->overdue_penalty ?>">
+                                </div>
 
-                                    <button type="submit" class="btn btn-primary" name="updatePlan">Update Loan Plan</button>
-                                </form>
-                            </div>
+                                <button type="submit" class="btn btn-primary" name="updatePlan">Update Loan Plan</button>
+                            </form>
                         </div>
                     </div>
                 </div>
-    <?php
-            endwhile;
+            </div>
+        <?php
+        endwhile;
         if (isset($_POST['updatePlan'])) {
             $plan = ucwords($_POST['plan']);
             $interestRate = $_POST['interestRate'];
@@ -604,6 +604,82 @@ function updateLoanPlan()
                     $message = "<p class='text-success '>Loan plan updated successfully</p>";
 
                     header("Location: /admin/loan-plans.php");
+                } else {
+                    $message = "<p class='text-danger'>Loan plan not updated. Please try again</p>";
+                }
+            }
+        }
+    }
+}
+
+function updateLoanType()
+{
+    $con = dbConnect();
+    $id = returnEditID();
+    $message = "Update Loan Type";
+
+    $sql = "SELECT loan_type, interest_rate, `description` FROM loan_type WHERE id = ?";
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param('s', $id);
+    $stmt->execute();
+    $res = $stmt->get_result();
+
+    if ($res->num_rows < 1) {
+        echo "<p class='text-danger h1 text-center'>Loan type not found</p>";
+
+        header("Refresh: 3, /admin/loan-types.php");
+    } else {
+        while ($row = $res->fetch_object()) : ?>
+            <div id="edit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">
+                                <?= $message ?>
+                            </h5>
+                        </div>
+                        <div class="modal-body">
+                            <form method="POST">
+                                <div class="mb-3">
+                                    <label for="loanType" class="form-label">Loan Type</label>
+                                    <input type="text" class="form-control" id="loanType" aria-describedby="loanType" name="loanType" value="<?= $row->loan_type ?>">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="interestRate" class="form-label">Interest Rate</label>
+                                    <input type="number" min="1" class="form-control" id="interestRate" name="interestRate" value="<?= $row->interest_rate ?>">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">Description</label>
+                                    <textarea class="form-control" id="description" name="description"><?= $row->description ?></textarea>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary" name="updateType">Update Loan Type</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+<?php
+        endwhile;
+        if (isset($_POST['updateType'])) {
+            $loanType = ucwords($_POST['loanType']);
+            $interestRate = $_POST['interestRate'];
+            $description = $_POST['description'];
+
+            if (empty($_POST['loanType']) || empty($_POST['interestRate']) || empty($_POST['description'])) {
+                $message = "<span class='text-danger'>Please fill all the fields</span>";
+
+                return;
+            } else {
+                $sql = "UPDATE loan_type SET loan_type = ?, interest_rate = ?, `description` = ? WHERE id = ?";
+                $stmt = $con->prepare($sql);
+                $stmt->bind_param('ssss', $loanType, $interestRate, $description, $id);
+                $stmt->execute();
+
+                if ($stmt->affected_rows > 0) {
+                    $message = "<p class='text-success '>Loan type updated successfully</p>";
+
+                    header("Location: /admin/loan-types.php");
                 } else {
                     $message = "<p class='text-danger'>Loan plan not updated. Please try again</p>";
                 }
