@@ -169,6 +169,8 @@ function viewPendingLoans()
     $sql = "SELECT * FROM loan WHERE status = 'pending'";
     $stmt = $con->query($sql);
 
+    approveLoan();
+
     if ($stmt->num_rows < 1) {
         echo "<p class='text-danger text-center h1 mt-5'>No pending loans available</p>";
 
@@ -200,9 +202,13 @@ function viewPendingLoans()
                     <td><?= $row->loan_type ?></td>
                     <td><?= $row->loan_plan ?></td>
                     <td>₦ <?= number_format($row->amount) ?></td>
-                    <td>
-                        <a href="/admin/pending-loan.php?approve=true&id=1">
+                    <td class="d-flex w-100 justify-content-between">
+                        <a href="/admin/pending-loan.php?approve=true&id=<?= $row->id ?>&user_id=<?= $row->user_id ?>">
                             Approve Loan
+                        </a>
+
+                        <a href="/admin/pending-loan.php?decline=true&id=<?= $row->id ?>&user_id=<?= $row->user_id ?>">
+                            Decline Loan
                         </a>
                     </td>
                 </tr>
@@ -719,4 +725,41 @@ function getTotalExpectedFunds()
     }
 
     return $total;
+}
+
+function approveLoan()
+{
+    $con = dbConnect();
+    if (isset($_GET['approve']) && isset($_GET['id']) && isset($_GET['user_id'])) {
+        if ($_GET['approve'] === 'true') {
+            $id = $_GET['id'];
+            $userID = $_GET['user_id'];
+
+            $sql = "SELECT id FROM loan WHERE id = ? AND user_id = ?";
+            $stmt = $con->prepare($sql);
+            $stmt->bind_param("ss", $id, $userID);
+            $stmt->execute();
+            $res = $stmt->get_result();
+
+            if ($res->num_rows < 1) {
+                header("Location: /admin/pending-loan.php");
+            } else {
+                $sql = "UPDATE loan SET status = 'debtor' WHERE id = ? AND user_id = ?";
+                $stmt = $con->prepare($sql);
+                $stmt->bind_param("ss", $id, $userID);
+                $stmt->execute();
+                $stmt->get_result();
+
+                if ($stmt->affected_rows > 0) {
+                    echo "<p class='text-success h3'>Loan approved successfully.</p>";
+
+                    header("Refresh: 3, /admin/pending-loan.php");
+                } else {
+                    echo "<p class='text-danger h3'>There was problem approving this loan. Please again later.</p>";
+                }
+            }
+        } else {
+            header("Location: /admin/pending-loan.php");
+        }
+    }
 }
