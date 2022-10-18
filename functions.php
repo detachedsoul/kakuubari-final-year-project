@@ -170,6 +170,7 @@ function viewPendingLoans()
     $stmt = $con->query($sql);
 
     approveLoan();
+    declineLoan();
 
     if ($stmt->num_rows < 1) {
         echo "<p class='text-danger text-center h1 mt-5'>No pending loans available</p>";
@@ -735,7 +736,7 @@ function approveLoan()
             $id = $_GET['id'];
             $userID = $_GET['user_id'];
 
-            $sql = "SELECT id FROM loan WHERE id = ? AND user_id = ?";
+            $sql = "SELECT loan_plan FROM loan WHERE id = ? AND user_id = ?";
             $stmt = $con->prepare($sql);
             $stmt->bind_param("ss", $id, $userID);
             $stmt->execute();
@@ -744,7 +745,9 @@ function approveLoan()
             if ($res->num_rows < 1) {
                 header("Location: /admin/pending-loan.php");
             } else {
-                $sql = "UPDATE loan SET status = 'debtor' WHERE id = ? AND user_id = ?";
+                $repaymentDate = date('D jS M, Y', strtotime("+ {$res->fetch_object()->loan_plan}"));
+
+                $sql = "UPDATE loan SET status = 'debtor', `date` = '{$repaymentDate}' WHERE id = ? AND user_id = ?";
                 $stmt = $con->prepare($sql);
                 $stmt->bind_param("ss", $id, $userID);
                 $stmt->execute();
@@ -756,6 +759,43 @@ function approveLoan()
                     header("Refresh: 3, /admin/pending-loan.php");
                 } else {
                     echo "<p class='text-danger h3'>There was problem approving this loan. Please again later.</p>";
+                }
+            }
+        } else {
+            header("Location: /admin/pending-loan.php");
+        }
+    }
+}
+
+function declineLoan()
+{
+    $con = dbConnect();
+    if (isset($_GET['decline']) && isset($_GET['id']) && isset($_GET['user_id'])) {
+        if ($_GET['decline'] === 'true') {
+            $id = $_GET['id'];
+            $userID = $_GET['user_id'];
+
+            $sql = "SELECT loan_plan FROM loan WHERE id = ? AND user_id = ?";
+            $stmt = $con->prepare($sql);
+            $stmt->bind_param("ss", $id, $userID);
+            $stmt->execute();
+            $res = $stmt->get_result();
+
+            if ($res->num_rows < 1) {
+                header("Location: /admin/pending-loan.php");
+            } else {
+                $sql = "UPDATE loan SET status = 'rejected' WHERE id = ? AND user_id = ?";
+                $stmt = $con->prepare($sql);
+                $stmt->bind_param("ss", $id, $userID);
+                $stmt->execute();
+                $stmt->get_result();
+
+                if ($stmt->affected_rows > 0) {
+                    echo "<p class='text-success h3'>Loan rejected successfully.</p>";
+
+                    header("Refresh: 3, /admin/pending-loan.php");
+                } else {
+                    echo "<p class='text-danger h3'>There was problem rejecting this loan. Please again later.</p>";
                 }
             }
         } else {
