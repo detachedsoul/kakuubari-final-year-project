@@ -1,5 +1,8 @@
 <?php
 require_once("../functions.php");
+if (!isset($_SESSION['id']) || !isset($_SESSION['userFullName'])) {
+    header("Location: /admin");
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">

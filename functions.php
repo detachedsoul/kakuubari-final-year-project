@@ -858,8 +858,10 @@ function changePassword($table)
 
 function logOut($redirectTo)
 {
-    if (isset($_GET['logout'])) {
-        session_destroy();
-        header("Location: {$redirectTo}");
-    }
+    unset($_SESSION['id']);
+    unset($_SESSION['userFullName']);
+    $_SESSION['id'] = null;
+    $_SESSION['userFullName'] = null;
+    session_destroy();
+    header("Location: {$redirectTo}");
 }
