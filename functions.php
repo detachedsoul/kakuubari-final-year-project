@@ -60,7 +60,7 @@ function registerUser()
                 $stmt->execute();
 
                 echo "<p class='text-success'>Registration successful.</p>";
-                header("Refresh: 5; users/");
+                header("Refresh: 5; /");
             }
         } else {
             echo "<p class='text-danger'>All fields are required</p>";
@@ -79,7 +79,7 @@ function login($table, $redirectTo)
         $usernamePassword = strtolower($_POST['usernamePassword']);
         $password = $_POST['password'];
 
-        $sql = "SELECT `password`, `name` FROM {$table} WHERE username = ? OR email = ?";
+        $sql = "SELECT `id`, `password`, `name` FROM {$table} WHERE username = ? OR email = ?";
         $login = $con->prepare($sql);
         $login->bind_param(
             "ss",
@@ -91,14 +91,15 @@ function login($table, $redirectTo)
 
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_object()) {
+                $id = $row->id;
                 $userPassword = $row->password;
                 $userFullName = $row->name;
             }
 
-
             if (password_verify($password, $userPassword)) {
                 echo "<p class='text-success'>Login successful.</p>";
                 $_SESSION['userFullName'] = $userFullName;
+                $_SESSION['id'] = $id;
 
                 header("Refresh: 5; {$redirectTo}");
             } else {
@@ -801,5 +802,64 @@ function declineLoan()
         } else {
             header("Location: /admin/pending-loan.php");
         }
+    }
+}
+
+function changePassword($table)
+{
+    $con = dbConnect();
+    if (isset($_POST['changePassword'])) {
+        $oldPassword = $_POST['oldPassword'];
+        $newPassword = $_POST['newPassword'];
+        $confirmPassword = $_POST['confirmPassword'];
+
+        if (empty($oldPassword) || empty($newPassword) || empty($confirmPassword)) {
+            $message = "<p class='text-danger'>Please fill all the fields</p>";
+        } else {
+            $sql = "SELECT password FROM `{$table}` WHERE id = ?";
+            $stmt = $con->prepare($sql);
+            $stmt->bind_param("s", $_SESSION['id']);
+            $stmt->execute();
+            $res = $stmt->get_result();
+
+            if ($res->num_rows < 1) {
+                $message = "<p class='text-danger'>There was problem changing your password. Please try again later.</p>";
+            } else {
+                $row = $res->fetch_object();
+
+                if (password_verify($oldPassword, $row->password)) {
+                    if ($newPassword === $confirmPassword) {
+                        $newPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+
+                        $sql = "UPDATE `{$table}` SET password = ? WHERE id = ?";
+                        $stmt = $con->prepare($sql);
+                        $stmt->bind_param("ss", $newPassword, $_SESSION['id']);
+                        $stmt->execute();
+
+                        if ($stmt->affected_rows > 0) {
+                            $message = "<p class='text-success'>Password changed successfully.</p>";
+                        } else {
+                            $message = "<p class='text-danger'>There was problem changing your password. Please try again later.</p>";
+                        }
+                    } else {
+                        $message = "<p class='text-danger'>New password and confirm password does not match.</p>";
+                    }
+                } else {
+                    $message = "<p class='text-danger'>Old password is incorrect.</p>";
+                }
+            }
+        }
+    } else {
+        $message = "<p>Change Password</p>";
+    }
+
+    echo $message;
+}
+
+function logOut($redirectTo)
+{
+    if (isset($_GET['logout'])) {
+        session_destroy();
+        header("Location: {$redirectTo}");
     }
 }

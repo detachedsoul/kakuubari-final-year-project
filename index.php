@@ -16,7 +16,7 @@
     <main class="form-signin w-100 m-auto">
         <form method="POST">
             <h1 class="h3 mb-3 fw-normal">
-                <?= login("users", "users/") ?>
+                <?= login("users", "users/home.php") ?>
             </h1>
 
             <div class="form-floating">
