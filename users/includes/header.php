@@ -58,6 +58,16 @@ if (!isset($_SESSION['id']) || !isset($_SESSION['userFullName'])) {
             <hr class="sidebar-divider my-0">
 
             <li class=" nav-item">
+                <a class="nav-link" href="/users/loan-application.php">
+                    <i class="fas fa-fw fa-dollar-sign"></i>
+                    <span>Loan Application</span></a>
+            </li>
+
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <li class=" nav-item">
                 <a class="nav-link" href="/users/pending-loan.php">
                     <i class="fas fa-fw fa-credit-card"></i>
                     <span>Pending Loan</span></a>
@@ -76,8 +86,18 @@ if (!isset($_SESSION['id']) || !isset($_SESSION['userFullName'])) {
             <hr class="sidebar-divider my-0">
 
             <li class=" nav-item">
+                <a class="nav-link" href="/users/outstanding-loan.php">
+                    <i class="fas fa-fw fa-question"></i>
+                    <span>Outstanding Loan</span></a>
+            </li>
+
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <li class=" nav-item">
                 <a class="nav-link" href="/users/rejected-loans.php">
-                    <i class="fas fa-fw fa-users"></i>
+                    <i class="fas fa-fw fa-bolt"></i>
                     <span>Rejected Loans</span></a>
             </li>
 
