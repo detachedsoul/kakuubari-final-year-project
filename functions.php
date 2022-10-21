@@ -698,7 +698,7 @@ function updateLoanType()
 function getTotalBorrowers()
 {
     $con = dbConnect();
-    $sql = "SELECT id FROM loan WHERE status = 'debtor'";
+    $sql = "SELECT DISTINCT user_id FROM loan WHERE status = 'debtor'";
     $stmt = $con->query($sql);
 
     return $stmt->num_rows;
@@ -849,7 +849,7 @@ function changePassword($table)
         $confirmPassword = $_POST['confirmPassword'];
 
         if (empty($oldPassword) || empty($newPassword) || empty($confirmPassword)) {
-            $message = "<p class='text-danger'>Please fill all the fields</p>";
+            $message = "<span class='text-danger'>Please fill all the fields</span>";
         } else {
             $sql = "SELECT password FROM `{$table}` WHERE id = ?";
             $stmt = $con->prepare($sql);
@@ -858,7 +858,7 @@ function changePassword($table)
             $res = $stmt->get_result();
 
             if ($res->num_rows < 1) {
-                $message = "<p class='text-danger'>There was problem changing your password. Please try again later.</p>";
+                $message = "<span class='text-danger'>There was problem changing your password. Please try again later.</span>";
             } else {
                 $row = $res->fetch_object();
 
@@ -872,15 +872,15 @@ function changePassword($table)
                         $stmt->execute();
 
                         if ($stmt->affected_rows > 0) {
-                            $message = "<p class='text-success'>Password changed successfully.</p>";
+                            $message = "<span class='text-success'>Password changed successfully.</span>";
                         } else {
-                            $message = "<p class='text-danger'>There was problem changing your password. Please try again later.</p>";
+                            $message = "<span class='text-danger'>There was problem changing your password. Please try again later.</span>";
                         }
                     } else {
-                        $message = "<p class='text-danger'>New password and confirm password does not match.</p>";
+                        $message = "<span class='text-danger'>New password and confirm password does not match.</span>";
                     }
                 } else {
-                    $message = "<p class='text-danger'>Old password is incorrect.</p>";
+                    $message = "< class='text-danger'>Old password is incorrect.</span>";
                 }
             }
         }
@@ -1043,7 +1043,6 @@ function userViewPaymentHistory()
     </table>
 <?php
 }
-
 
 function userViewPendingLoan()
 {
@@ -1222,4 +1221,35 @@ function applyForLoan()
     } else {
         echo "Apply for loan.";
     }
+}
+
+function getTotalPayableFunds()
+{
+    $con = dbConnect();
+    $id = $_SESSION['id'];
+
+    $sql = "SELECT amount FROM loan WHERE status = 'debtor' AND user_id = ?";
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param("s", $id);
+    $stmt->execute();
+    $res = $stmt->get_result();
+    $total = 0;
+
+    while ($row = $res->fetch_object()) {
+        $total = $row->amount + $total;
+    }
+
+    return $total;
+}
+
+function userGetTotalPendingRequest()
+{
+    $con = dbConnect();
+    $sql = "SELECT id FROM loan WHERE status = 'pending' AND user_id = ?";
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param("s", $_SESSION['id']);
+    $stmt->execute();
+    $res = $stmt->get_result();
+
+    return $res->num_rows;
 }
