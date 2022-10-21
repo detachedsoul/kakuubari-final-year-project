@@ -2,9 +2,6 @@
 $pageTitle = "User Dashboard &mdash; Settings";
 require_once("includes/header.php");
 ?>
-<h2>
-    Change Password
-</h2>
 
 <div>
     <div class="modal-dialog" role="document">
@@ -36,5 +33,29 @@ require_once("includes/header.php");
     </div>
 </div>
 
+<?php if (!checkBVNStatus()) : ?>
+
+    <div id="bvn">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>
+                        <?= updateBVN() ?>
+                    </h5>
+                </div>
+                <div class="modal-body">
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label for="bvn" class="form-label">BVN</label>
+                            <input type="number" class="form-control" id="bvn" aria-describedby="bvn" name="bvn">
+                        </div>
+
+                        <button type=" submit" class="btn btn-primary" name="updateBVN">Update BVN</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 <?php
+endif;
 require_once("includes/footer.php");

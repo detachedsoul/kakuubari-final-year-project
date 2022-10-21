@@ -150,7 +150,7 @@ function resetPassword($table)
             $headers .= "From: Adoobe Kakuubari Believe kakuubari1@gmail.com";
 
             if (mail($result->fetch_object()->email, "Password Reset", "Your new password is {$newPassword}", $headers)) {
-                echo "<p class='text-success'>Your new password has been sent to {$result->fetch_object()->email}</p>";
+                echo "<p class='text-success'>Your new password has been sent to your email.</p>";
             } else {
                 echo "<p class='text-danger'>There was a problem resetting your password, please try again later.</p>";
             }
@@ -1166,6 +1166,18 @@ function applyForLoan()
         $res = $stmt->get_result();
         $bvn = $res->fetch_object()->bvn;
 
+        if ($res->num_rows < 1) {
+            echo "<span class='text-danger h2'>You are yet to upload ypur BVN. Please do so in the <a href='users/settings.php#bvn'>settings page</a> and try again later.</span>";
+
+            return;
+        }
+
+        if ($bvn === NULL || $bvn === null || $bvn === "") {
+            echo "<span class='text-danger h2'>Invalid BVN. Please update it using the <a href='/users/settings.php#bvn'>settings page</a> and try again later.</span>";
+
+            return;
+        }
+
         // Get percentage for the selected loan type and add it to the amount
         $sql = "SELECT interest_rate FROM loan_type WHERE loan_type = ?";
         $stmt = $con->prepare($sql);
@@ -1242,6 +1254,31 @@ function getTotalPayableFunds()
     return $total;
 }
 
+function updateBVN()
+{
+    $con = dbConnect();
+
+    if (isset($_POST['updateBVN'])) {
+        $id = $_SESSION['id'];
+        $bvn = $_POST['bvn'];
+
+        $sql = "UPDATE users SET bvn = ? WHERE id = ?";
+        $stmt = $con->prepare($sql);
+        $stmt->bind_param("ss", $bvn, $id);
+        $stmt->execute();
+
+        if ($stmt->affected_rows > 0) {
+            echo "<p class='text-success h2'>BVN updated successfully.</p>";
+
+            header("Refresh: 3, /users/settings.php");
+        } else {
+            echo "<p class='text-danger h2'>BVN update failed.</p>";
+        }
+    } else {
+        echo "Update BVN.";
+    }
+}
+
 function userGetTotalPendingRequest()
 {
     $con = dbConnect();
@@ -1252,4 +1289,21 @@ function userGetTotalPendingRequest()
     $res = $stmt->get_result();
 
     return $res->num_rows;
+}
+
+function checkBVNStatus()
+{
+    $con = dbConnect();
+
+    $sql = "SELECT bvn FROM users WHERE id = ?";
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param("s", $_SESSION['id']);
+    $stmt->execute();
+    $res = $stmt->get_result();
+    $bvn = $res->fetch_object()->bvn;
+    if ($bvn === NULL || $bvn === null || $bvn === "") {
+        return false;
+    } else {
+        return true;
+    }
 }
