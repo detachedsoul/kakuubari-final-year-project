@@ -1089,5 +1089,137 @@ function userViewPendingLoan()
             ?>
         </tbody>
     </table>
+    <?php
+}
+
+function getLoanTypes()
+{
+    $con = dbConnect();
+    $sql = "SELECT loan_type FROM loan_type";
+    $stmt = $con->prepare($sql);
+    $stmt->execute();
+    $res = $stmt->get_result();
+
+    if ($res->num_rows < 1) {
+        echo "<p class='text-danger h2 text-center mt-5'>No loan type found.</p>";
+
+        return;
+    } else {
+        while ($row = $res->fetch_object()) : ?>
+            <option value="<?= $row->loan_type ?>" name="loanType"><?= $row->loan_type ?></option>
+
+        <?php
+        endwhile;
+    }
+}
+
+function getLoanPlans()
+{
+    $con = dbConnect();
+    $sql = "SELECT plan FROM loan_plan";
+    $stmt = $con->prepare($sql);
+    $stmt->execute();
+    $res = $stmt->get_result();
+
+    if ($res->num_rows < 1) {
+        echo "<p class='text-danger h2 text-center mt-5'>No loan plan found.</p>";
+
+        return;
+    } else {
+        while ($row = $res->fetch_object()) : ?>
+            <option value="<?= $row->plan ?>" name="loanPlan"><?= $row->plan ?></option>
+
 <?php
+        endwhile;
+    }
+}
+
+function applyForLoan()
+{
+    $con = dbConnect();
+
+    if (isset($_POST['applyForLoan'])) {
+        $userID = $_SESSION['id'];
+        $name = $_SESSION['userFullName'];
+        $loanType = $_POST['loanType'];
+        $loanPlan = $_POST['loanPlan'];
+        $amount = $_POST['amount'];
+
+        // Check if all fields were filled
+        $fields = [
+            $loanType,
+            $loanPlan,
+            $amount,
+        ];
+        foreach ($fields as $field) {
+            if (empty($field)) {
+                echo "<span class='text-danger h2'>All fields are required.</span>";
+
+                return;
+            }
+        }
+
+        // Get the user's BVN
+        $sql = "SELECT bvn FROM users WHERE id = ?";
+        $stmt = $con->prepare($sql);
+        $stmt->bind_param("s", $userID);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        $bvn = $res->fetch_object()->bvn;
+
+        // Get percentage for the selected loan type and add it to the amount
+        $sql = "SELECT interest_rate FROM loan_type WHERE loan_type = ?";
+        $stmt = $con->prepare($sql);
+        $stmt->bind_param("s", $loanType);
+        $stmt->execute();
+        $res = $stmt->get_result();
+
+        if ($res->num_rows < 1) {
+            echo "<span class='text-danger h2'>Invalid loan type.</span>";
+
+            return;
+        }
+
+        $interestRate = $res->fetch_object()->interest_rate;
+        settype($interestRate, "integer");
+
+        $loanTypePercentage = $amount * ($interestRate / 100);
+
+        // Get percentage for the selected loan plan and add it to the amount
+        $sql = "SELECT interest_rate FROM loan_plan WHERE plan = ?";
+        $stmt = $con->prepare($sql);
+        $stmt->bind_param("s", $loanPlan);
+        $stmt->execute();
+        $res = $stmt->get_result();
+
+        if ($res->num_rows < 1) {
+            echo "<span class='text-danger h2'>Invalid loan plan.</span>";
+
+            return;
+        }
+
+        $interestRate = $res->fetch_object()->interest_rate;
+        settype($interestRate, "integer");
+
+
+        $loanPlanPercentage =
+            $amount * ($interestRate / 100);
+
+        $totalAmount = $amount + $loanTypePercentage + $loanPlanPercentage;
+
+        $sql = "INSERT INTO loan (user_id, name, loan_type, loan_plan, amount, bvn) VALUES (?, ?, ?, ?, ?, ?)";
+        $stmt = $con->prepare($sql);
+        $stmt->bind_param("ssssss", $userID, $name, $loanType, $loanPlan, $totalAmount, $bvn);
+        $stmt->execute();
+
+        if ($stmt->affected_rows > 0) {
+            echo "<p class='text-success h2'>Loan application successful.</p>";
+
+            header("Refresh: 3, /users/pending-loan.php");
+        } else {
+            echo "<p class='text-danger h2'>Loan application failed.</p>";
+        }
+    } else {
+        echo "Apply for loan.";
+    }
 }
