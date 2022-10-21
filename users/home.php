@@ -1,5 +1,5 @@
 <?php
-$pageTitle = "Admin Dashboard &mdash; Home";
+$pageTitle = "User Dashboard &mdash; Home";
 require_once("includes/header.php");
 ?>
 

@@ -13,7 +13,6 @@ function returnEditID()
     return $_GET['editByID'];
 }
 
-// Registers a new user
 function registerUser()
 {
     $con = dbConnect();
@@ -70,7 +69,6 @@ function registerUser()
     }
 }
 
-// Logs a user in if the provided details are valid
 function login($table, $redirectTo)
 {
     $con = dbConnect();
@@ -113,7 +111,6 @@ function login($table, $redirectTo)
     }
 }
 
-// Reset's a user's password
 function resetPassword($table)
 {
     $con = dbConnect();
@@ -274,6 +271,7 @@ function viewBorrowers()
     $stmt = $con->query($sql);
 
     if ($stmt->num_rows < 1) {
+
         echo "<p class='text-danger text-center h1 mt-5'>No debtor available</p>";
 
         return;
@@ -305,7 +303,7 @@ function viewBorrowers()
                     <td>₦ <?= $row->amount ?></td>
                     <td><?= $row->date ?></td>
                     <td>
-                        <a href="/admin/borrowes.php?set-paid=true&id=1">
+                        <a href="/admin/borrowers.php?set-paid=true&loanID=<?= $row->id ?>&id=<?= $row->user_id ?>">
                             Set as paid
                         </a>
                     </td>
@@ -801,6 +799,43 @@ function declineLoan()
             }
         } else {
             header("Location: /admin/pending-loan.php");
+        }
+    }
+}
+
+function updatePaidStatus()
+{
+    $con = dbConnect();
+    if (isset($_GET['set-paid']) && isset($_GET['loanID']) && isset($_GET['id'])) {
+        if ($_GET['set-paid'] === 'true') {
+            $loanID = $_GET['loanID'];
+            $id = $_GET['id'];
+
+            $sql = "SELECT user_id FROM loan WHERE id = ? AND user_id = ? AND `status` = 'debtor'";
+            $stmt = $con->prepare($sql);
+            $stmt->bind_param("ss", $loanID, $id);
+            $stmt->execute();
+            $res = $stmt->get_result();
+
+            if ($res->num_rows < 1) {
+                header("Location: /admin/borrowers.php");
+            } else {
+                $sql = "UPDATE loan SET status = 'paid' WHERE id = ? AND user_id = ?";
+                $stmt = $con->prepare($sql);
+                $stmt->bind_param("ss", $loanID, $id);
+                $stmt->execute();
+                $stmt->get_result();
+
+                if ($stmt->affected_rows > 0) {
+                    echo "<p class='text-success h3'>Loan paid successfully.</p>";
+
+                    header("Refresh: 3, /admin/borrowers.php");
+                } else {
+                    echo "<p class='text-danger h3'>There was problem paying this loan. Please again later.</p>";
+                }
+            }
+        } else {
+            header("Location: /admin/borrowers.php");
         }
     }
 }

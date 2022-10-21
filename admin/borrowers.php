@@ -7,7 +7,10 @@ require_once("includes/header.php");
     Borrower's List
 </h2>
 
-<?= viewBorrowers(); ?>
+<?=
+    updatePaidStatus();
+    viewBorrowers();
+?>
 
 <?php
 require_once("includes/footer.php");

@@ -35,7 +35,7 @@ if (!isset($_SESSION['id']) || !isset($_SESSION['userFullName'])) {
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/admin/home.php">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/users/home.php">
                 <div class="sidebar-brand-icon">
                     <i class="fas fa-home"></i>
                 </div>
@@ -49,7 +49,7 @@ if (!isset($_SESSION['id']) || !isset($_SESSION['userFullName'])) {
 
             <!-- Nav Item - Dashboard -->
             <li class=" nav-item active">
-                <a class="nav-link" href="/admin/home.php">
+                <a class="nav-link" href="/users/home.php">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
@@ -58,7 +58,7 @@ if (!isset($_SESSION['id']) || !isset($_SESSION['userFullName'])) {
             <hr class="sidebar-divider my-0">
 
             <li class=" nav-item">
-                <a class="nav-link" href="/admin/pending-loan.php">
+                <a class="nav-link" href="/users/pending-loan.php">
                     <i class="fas fa-fw fa-credit-card"></i>
                     <span>Pending Loan</span></a>
             </li>
@@ -67,7 +67,7 @@ if (!isset($_SESSION['id']) || !isset($_SESSION['userFullName'])) {
             <hr class="sidebar-divider my-0">
 
             <li class=" nav-item">
-                <a class="nav-link" href="/admin/payment-history.php">
+                <a class="nav-link" href="/users/payment-history.php">
                     <i class="fas fa-fw fa-dollar-sign"></i>
                     <span>Payment History</span></a>
             </li>
@@ -76,27 +76,9 @@ if (!isset($_SESSION['id']) || !isset($_SESSION['userFullName'])) {
             <hr class="sidebar-divider my-0">
 
             <li class=" nav-item">
-                <a class="nav-link" href="/admin/borrowers.php">
+                <a class="nav-link" href="/users/rejected-loans.php">
                     <i class="fas fa-fw fa-users"></i>
-                    <span>Borrowers</span></a>
-            </li>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider my-0">
-
-            <li class=" nav-item">
-                <a class="nav-link" href="/admin/loan-types.php">
-                    <i class="fas fa-fw fa-paperclip"></i>
-                    <span>Loan Types</span></a>
-            </li>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider my-0">
-
-            <li class=" nav-item">
-                <a class="nav-link" href="/admin/loan-plans.php">
-                    <i class="fas fa-fw fa-landmark"></i>
-                    <span>Loan Plans</span></a>
+                    <span>Rejected Loans</span></a>
             </li>
 
             <hr class="sidebar-divider d-none d-md-block">
@@ -138,7 +120,7 @@ if (!isset($_SESSION['id']) || !isset($_SESSION['userFullName'])) {
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="/admin/settings.php">
+                                <a class="dropdown-item" href="/users/settings.php">
                                     <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Settings
                                 </a>
