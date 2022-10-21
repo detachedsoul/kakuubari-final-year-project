@@ -1,14 +1,14 @@
 <?php
-$pageTitle = "User Dashboard &mdash; Rejected Loans";
+$pageTitle = "User Dashboard &mdash; Oustanding Loans";
 require_once("includes/header.php");
 ?>
 
 <h2>
-    Rejected Loan Requests
+    View Oustanding Loans
 </h2>
 
 <?=
-viewRejectedLoans();
+    viewOutstandingLoans();
 ?>
 
 <?php

@@ -99,7 +99,7 @@ function login($table, $redirectTo)
                 $_SESSION['userFullName'] = $userFullName;
                 $_SESSION['id'] = $id;
 
-                header("Refresh: 5; {$redirectTo}");
+                header("Refresh: 3; {$redirectTo}");
             } else {
                 echo "<p class='text-danger'>Incorrect username, email or password</p>";
             }
@@ -666,7 +666,7 @@ function updateLoanType()
                     </div>
                 </div>
             </div>
-<?php
+    <?php
         endwhile;
         if (isset($_POST['updateType'])) {
             $loanType = ucwords($_POST['loanType']);
@@ -939,6 +939,55 @@ function viewRejectedLoans()
                     <td><?= $row->loan_type ?></td>
                     <td><?= $row->loan_plan ?></td>
                     <td>₦ <?= number_format($row->amount) ?></td>
+                    <td class="text-danger"><?= ucfirst($row->status) ?></td>
+                </tr>
+            <?php endwhile;
+            ?>
+        </tbody>
+    </table>
+<?php
+}
+
+function viewOutstandingLoans()
+{
+    $con = dbConnect();
+    $sql = "SELECT * FROM loan WHERE status = 'debtor' AND user_id = ?";
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param("s", $_SESSION['id']);
+    $stmt->execute();
+    $res = $stmt->get_result();
+
+    if ($res->num_rows < 1) {
+        echo "<p class='text-danger h2 text-center mt-5'>No outstanding loan found.</p>";
+
+        return;
+    } else ?>
+    <table class="table mt-4 table-hover table-striped">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Loan ID</th>
+                <th scope="col">Full Name</th>
+                <th scope="col">Loan Type</th>
+                <th scope="col">Loan Plan</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Repayment Date</th>
+                <th scope="col">Status</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <?php
+            while ($row = $res->fetch_object()) : ?>
+                <tr>
+                    <td><?= $row->id ?></td>
+                    <td><?= $row->user_id ?></td>
+                    <td><?= $row->name ?></td>
+                    <td><?= $row->loan_type ?></td>
+                    <td><?= $row->loan_plan ?></td>
+                    <td>₦ <?= number_format($row->amount) ?></td>
+                    <td><?= $row->date ?></td>
                     <td class="text-danger"><?= ucfirst($row->status) ?></td>
                 </tr>
             <?php endwhile;
