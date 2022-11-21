@@ -47,7 +47,9 @@ require_once("includes/header.php");
     </div>
 </div>
 
-<?= viewLoanTypes(); ?>
+<div class="table-responsive">
+    <?= viewLoanTypes(); ?>
+</div>
 
 <?php
 require_once("includes/footer.php");

@@ -47,7 +47,9 @@ require_once("includes/header.php");
     </div>
 </div>
 
-<?= viewLoanPlan(); ?>
+<div class="table-responsive">
+    <?= viewLoanPlan(); ?>
+</div>
 
 
 <?php

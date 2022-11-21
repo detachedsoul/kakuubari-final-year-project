@@ -7,9 +7,9 @@ require_once("includes/header.php");
     View Oustanding Loans
 </h2>
 
-<?=
-    viewOutstandingLoans();
-?>
+<div class="table-responsive">
+    <?= viewOutstandingLoans(); ?>
+</div>
 
 <?php
 require_once("includes/footer.php");

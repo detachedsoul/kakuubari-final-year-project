@@ -7,9 +7,9 @@ require_once("includes/header.php");
     Rejected Loan Requests
 </h2>
 
-<?=
-viewRejectedLoans();
-?>
+<div class="table-responsive">
+    <?= viewRejectedLoans(); ?>
+</div>
 
 <?php
 require_once("includes/footer.php");

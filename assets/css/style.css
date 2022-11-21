@@ -33,6 +33,5 @@
 }
 
 table {
-    overflow-x: auto !important;
-    min-width: 100%;
+    min-width: max-content !important;
 }

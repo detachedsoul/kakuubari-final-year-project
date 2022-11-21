@@ -23,6 +23,7 @@ if (!isset($_SESSION['id']) || !isset($_SESSION['userFullName'])) {
 
     <!-- Custom styles for this template-->
     <link href="../../assets/css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="../../assets/css/style.css" rel="stylesheet">
 
 </head>
 
@@ -87,7 +88,7 @@ if (!isset($_SESSION['id']) || !isset($_SESSION['userFullName'])) {
             <li class=" nav-item">
                 <a class="nav-link" href="/admin/loan-types.php">
                     <i class="fas fa-fw fa-paperclip"></i>
-                    <span>Loan Types</span></a>
+                    <span>Set Loan Types</span></a>
             </li>
 
             <!-- Divider -->
@@ -96,7 +97,7 @@ if (!isset($_SESSION['id']) || !isset($_SESSION['userFullName'])) {
             <li class=" nav-item">
                 <a class="nav-link" href="/admin/loan-plans.php">
                     <i class="fas fa-fw fa-landmark"></i>
-                    <span>Loan Plans</span></a>
+                    <span>Set Loan Plans</span></a>
             </li>
 
             <hr class="sidebar-divider d-none d-md-block">

@@ -7,9 +7,9 @@ require_once("includes/header.php");
     View Payments History
 </h2>
 
-<?=
-    userViewPaymentHistory();
-?>
+<div class="table-responsive">
+    <?= userViewPaymentHistory(); ?>
+</div>
 
 <?php
 require_once("includes/footer.php");

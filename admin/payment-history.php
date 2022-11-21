@@ -7,7 +7,9 @@ require_once("includes/header.php");
     Payment History
 </h2>
 
-<?= adminViewPaymentHistory(); ?>
+<div class="table-responsive">
+    <?= adminViewPaymentHistory(); ?>
+</div>
 
 <?php
 require_once("includes/footer.php");

@@ -7,7 +7,9 @@ require_once("includes/header.php");
     Pending Loans
 </h2>
 
-<?= viewPendingLoans(); ?>
+<div class="table-responsive">
+    <?= viewPendingLoans(); ?>
+</div>
 
 <?php
 require_once("includes/footer.php");
